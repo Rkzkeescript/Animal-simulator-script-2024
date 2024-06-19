@@ -1,0 +1,124 @@
+ -- Wait for the LocalPlayer's Character to be available
+repeat wait() until game.Players.LocalPlayer.Character
+
+-- Initialize player
+local Player = game:GetService("Players").LocalPlayer
+
+-- Function to create new instances with properties
+local function CreateInstance(Object, Properties)
+    local NewInstance = Instance.new(Object)
+    for i, v in pairs(Properties) do
+        NewInstance[i] = v
+    end
+    return NewInstance
+end
+
+-- GUI Elements
+local MainGui = CreateInstance("ScreenGui", {
+    Name = "MainGui", 
+    ResetOnSpawn = false, 
+    Enabled = true, 
+    Parent = game:GetService("Players").LocalPlayer.PlayerGui
+})
+
+local MainFrame = CreateInstance("Frame", {
+    Name = "MainFrame", 
+    Size = UDim2.new(0, 250, 0, 250), 
+    Position = UDim2.new(0.5, -125, 0.5, -125), 
+    BackgroundColor3 = Color3.fromRGB(50, 52, 49), 
+    BackgroundTransparency = 0, 
+    BorderSizePixel = 0, 
+    Parent = MainGui, 
+    Active = true, 
+    Draggable = true
+})
+
+local Notice = CreateInstance("TextLabel", {
+    Name = "Notice", 
+    Text = "SCRIPT BY RKZKEE", 
+    BorderSizePixel = 0, 
+    BackgroundColor3 = Color3.fromRGB(15, 15, 15), 
+    BackgroundTransparency = 1, 
+    Parent = MainFrame, 
+    TextSize = 18, 
+    Size = UDim2.new(1, 0, 0, 15), 
+    Position = UDim2.new(0, 0, 0, 0), 
+    Font = Enum.Font.SourceSansLight, 
+    TextColor3 = Color3.fromRGB(255, 255, 255)
+})
+
+local XPFarm = CreateInstance("TextButton", {
+    Name = "XPFarm", 
+    Text = "Farm XP and Coins", 
+    BorderSizePixel = 0, 
+    BackgroundColor3 = Color3.fromRGB(25, 25, 25), 
+    BackgroundTransparency = 0.8, 
+    Parent = MainFrame, 
+    TextSize = 18, 
+    Size = UDim2.new(1, 0, 0, 15), 
+    Position = UDim2.new(0, 0, 0, 70), 
+    Font = Enum.Font.SourceSansLight, 
+    TextColor3 = Color3.fromRGB(255, 255, 255)
+})
+
+local StopFarming = CreateInstance("TextButton", {
+    Name = "StopFarming", 
+    Text = "Stop Farming", 
+    BorderSizePixel = 0, 
+    BackgroundColor3 = Color3.fromRGB(25, 25, 25), 
+    BackgroundTransparency = 0.8, 
+    Parent = MainFrame, 
+    TextSize = 18, 
+    Size = UDim2.new(1, 0, 0, 15), 
+    Position = UDim2.new(0, 0, 0, 90), 
+    Font = Enum.Font.SourceSansLight, 
+    TextColor3 = Color3.fromRGB(255, 255, 255)
+})
+
+local MinimizeButton = CreateInstance("TextButton", {
+    Name = "MinimizeButton",
+    Text = "_",
+    BorderSizePixel = 0,
+    BackgroundColor3 = Color3.fromRGB(25, 25, 25),
+    BackgroundTransparency = 0.8,
+    Parent = MainFrame,
+    TextSize = 18,
+    Size = UDim2.new(0, 20, 0, 20),
+    Position = UDim2.new(1, -25, 0, 5),
+    Font = Enum.Font.SourceSansLight,
+    TextColor3 = Color3.fromRGB(255, 255, 255)
+})
+
+local isMinimized = false
+
+-- Button event handlers
+XPFarm.MouseButton1Down:Connect(function()
+    _G.On = true
+    while _G.On == true do
+        wait()
+        game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("CoinEvent"):FireServer()
+    end
+end)
+
+StopFarming.MouseButton1Down:Connect(function()
+    _G.On = false
+end)
+
+MinimizeButton.MouseButton1Down:Connect(function()
+    if isMinimized then
+        MainFrame.Size = UDim2.new(0, 250, 0, 250)
+        for _, child in ipairs(MainFrame:GetChildren()) do
+            if child.Name ~= "MinimizeButton" then
+                child.Visible = true
+            end
+        end
+    else
+        MainFrame.Size = UDim2.new(0, 250, 0, 30)
+        for _, child in ipairs(MainFrame:GetChildren()) do
+            if child.Name ~= "MinimizeButton" then
+                child.Visible = false
+            end
+        end
+    end
+    isMinimized = not isMinimized
+end)
